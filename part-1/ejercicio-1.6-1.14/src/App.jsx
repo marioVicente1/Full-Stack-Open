@@ -1,73 +1,44 @@
 import { useState } from 'react'
 
-const StatisticLine = ({ text, value }) => {
-  return (
-    <tr>
-      <td>{text}: </td>
-      <td>{value}: </td>
-    </tr>
-  )
-}
+const App = () => {
+  const anecdotes = [
+    'If it hurts, do it more often.',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 10 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
+    'The only way to go fast, is to go well.'
+  ]
 
-const Statistics = ({ good, neutral, bad, all, average, positive }) => {
-  return (
-    <div>
-      <h2>Statistics</h2>
-      <table>
-        <tbody>
-          <StatisticLine text="Good" value={good} />
-          <StatisticLine text="Neutral" value={neutral} />
-          <StatisticLine text="Bad" value={bad} />
-          <StatisticLine text="All" value={all} />
-          <StatisticLine text="Average" value={average} />
-          <StatisticLine text="Positive" value={positive + ' %'} />
-        </tbody>
-      </table>
-    </div>
-  )
-}
+  const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
 
-function App() {
-  const [good, setGood] = useState(0)
-  const [bad, setbad] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [all, setAll] = useState(0)
-  const [average, setAverage] = useState(0)
-  const [positive, setPositive] = useState(0)
-
-  const handleClick = (value, setFunction, score) => {
-    setFunction(value + 1)
-    const newAllClicks = all + 1
-    setAll(newAllClicks)
-    const newAverage = (good * 1 + bad * -1 + score) / newAllClicks
-    setAverage(newAverage)
-    const newPositive = ((good + (score === 1 ? 1 : 0)) / newAllClicks) * 100
-    setPositive(newPositive)
+  const handleClick = () => {
+    const numero = Math.floor(Math.random() * anecdotes.length)
+    setSelected(numero)
   }
+  const handleVoteClick = () => {
+    const newVotes = [...votes]
+    newVotes[selected] += 1
+    setVotes(newVotes)
+  }
+  const mostVotedAnecdote = votes.indexOf(Math.max(...votes))
 
   return (
     <div>
-      <h1>Give feedback</h1>
-      <div>
-        <button onClick={() => handleClick(good, setGood, 1)}>good</button>
-        <button onClick={() => handleClick(neutral, setNeutral, 0)}>
-          neutral
-        </button>
-        <button onClick={() => handleClick(bad, setbad, -1)}>bad</button>
-      </div>
-
-      {all === 0 ? (
-        <p>No feedback given</p>
-      ) : (
-        <Statistics
-          good={good}
-          neutral={neutral}
-          average={average}
-          all={all}
-          positive={positive}
-          bad={bad}
-        />
-      )}
+      {anecdotes[selected]} <br />
+      has {votes[selected]} votes <br />
+      <button onClick={handleClick}> Next anecdote</button>
+      <button onClick={handleVoteClick}>vote</button>
+      <h2>Anecdote with most votes</h2>
+      {mostVotedAnecdote === 0
+        ? ''
+        : anecdotes[mostVotedAnecdote] +
+          ' has ' +
+          votes[mostVotedAnecdote] +
+          ' votes'}
     </div>
   )
 }

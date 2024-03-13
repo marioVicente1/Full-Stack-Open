@@ -7,11 +7,12 @@ const Content = ({ parts }) => {
       {parts.map((part) => (
         <Part key={part.id} parts={part} />
       ))}
-      <br />
-      {`total of ${parts.reduce(
-        (sum, part) => sum + part.exercises,
-        0
-      )} exercises`}
+      <strong>
+        {`total of ${parts.reduce(
+          (sum, part) => sum + part.exercises,
+          0
+        )} exercises`}
+      </strong>
     </div>
   )
 }
